@@ -156,7 +156,8 @@ def team_leave(request):
         membership = Membership.objects.get(team=team, user=request.user)
         membership.delete()
         messages.success(request, MESSAGE_STRINGS["left-team"])
-        return redirect("dashboard")
+        ##return redirect("dashboard")
+        return redirect("team_detail", slug=team.slug) ##
     else:
         return redirect("team_detail", slug=team.slug)
 
