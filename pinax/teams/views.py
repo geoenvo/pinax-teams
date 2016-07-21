@@ -194,6 +194,7 @@ def team_accept(request, pk):
 def team_reject(request, pk):
     membership = get_object_or_404(Membership, pk=pk)
     if membership.reject(by=request.user):
+        membership.remove(by=request.user) ## Remove the membership application too
         messages.success(request, MESSAGE_STRINGS["rejected-application"])
     ##return redirect("team_detail", slug=membership.team.slug)
     return redirect("team_manage", slug=membership.team.slug) ##
