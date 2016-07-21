@@ -45,6 +45,7 @@ class TeamSignupView(SignupView):
 
 class TeamCreateView(LoginRequiredMixin, CreateView):
 
+    template_name = "teams/team_form.html"
     form_class = TeamForm
     model = Team
 
@@ -57,6 +58,7 @@ class TeamCreateView(LoginRequiredMixin, CreateView):
 
 class TeamListView(ListView):
 
+    template_name = "teams/team_list.html"
     model = Team
     context_object_name = "teams"
 
