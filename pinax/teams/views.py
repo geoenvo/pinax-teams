@@ -185,7 +185,8 @@ def team_accept(request, pk):
     membership = get_object_or_404(Membership, pk=pk)
     if membership.accept(by=request.user):
         messages.success(request, MESSAGE_STRINGS["accepted-application"])
-    return redirect("team_detail", slug=membership.team.slug)
+    ##return redirect("team_detail", slug=membership.team.slug)
+    return redirect("team_manage", slug=membership.team.slug) ##
 
 
 @login_required
@@ -194,7 +195,8 @@ def team_reject(request, pk):
     membership = get_object_or_404(Membership, pk=pk)
     if membership.reject(by=request.user):
         messages.success(request, MESSAGE_STRINGS["rejected-application"])
-    return redirect("team_detail", slug=membership.team.slug)
+    ##return redirect("team_detail", slug=membership.team.slug)
+    return redirect("team_manage", slug=membership.team.slug) ##
 
 
 class TeamInviteView(FormView):
@@ -371,7 +373,8 @@ def team_member_remove(request, pk):
     data = {
         "html": ""
     }
-    return HttpResponse(json.dumps(data), content_type="application/json")
+    ##return HttpResponse(json.dumps(data), content_type="application/json")
+    return redirect("team_manage", slug=membership.team.slug) ##
 
 
 @team_required
