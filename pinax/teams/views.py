@@ -8,6 +8,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_POST
 from django.views.generic.edit import CreateView
 from django.views.generic import ListView, FormView, TemplateView
+from django.utils.translation import gettext_lazy as _
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -286,7 +287,9 @@ class TeamInviteView(FormView):
         self.after_membership_added(form)
 
         data = self.get_form_success_data(form)
-        return self.render_to_response(data)
+        ##return self.render_to_response(data)
+        messages.success(self.request, _('Successfully added the user to the team.')) ##
+        return redirect("team_manage", slug=self.team.slug) ##
 
     def form_invalid(self, form):
         data = {
@@ -295,7 +298,9 @@ class TeamInviteView(FormView):
                 "team": self.team
             }, context_instance=RequestContext(self.request))
         }
-        return self.render_to_response(data)
+        ##return self.render_to_response(data)
+        messages.error(self.request, _('An error happened when adding the user to the team.')) ##
+        return redirect("team_manage", slug=self.team.slug) ##
 
     def render_to_response(self, context, **response_kwargs):
         return JsonResponse(context)
