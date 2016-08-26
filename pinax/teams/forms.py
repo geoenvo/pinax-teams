@@ -2,8 +2,10 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 from django.contrib.auth import get_user_model
+from django.core.urlresolvers import reverse
 
 from account.forms import SignupForm
+from dal import autocomplete
 
 from .conf import settings
 from .hooks import hookset
@@ -51,8 +53,8 @@ class TeamForm(forms.ModelForm):
 
 
 class TeamInviteUserForm(forms.Form):
-
-    invitee = forms.CharField(label=_("Person to invite"))
+    User = get_user_model()
+    invitee = forms.ModelChoiceField(label=_("Person to invite"), queryset=User.objects.all(), widget=autocomplete.ModelSelect2())
     role = forms.ChoiceField(label=_("Role"), choices=Membership.ROLE_CHOICES, widget=forms.RadioSelect)
 
     def clean_invitee(self):
@@ -77,6 +79,7 @@ class TeamInviteUserForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.team = kwargs.pop("team")
         super(TeamInviteUserForm, self).__init__(*args, **kwargs)
+        self.fields["invitee"].widget.url = reverse('autocomplete_team_users', args=[self.team.slug])
         self.fields["invitee"].widget.attrs["data-autocomplete-url"] = hookset.build_team_url(
             "team_autocomplete_users",
             self.team.slug
